@@ -12,7 +12,7 @@ PyOghma_ML may be installed using pip
 
 
 ```bash
-    python -m pip install PyOghma_ML
+    python -m pip install PyOghma-ML
 ```
     
 ## Usage/Examples

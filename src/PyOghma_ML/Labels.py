@@ -1,14 +1,20 @@
 import numpy as np
 import ctypes
 import os
+import platform
 
 lib = {}
 lib_r = {}
 lib_json = {}
 
-dll_path = os.path.join('/', 'usr', 'lib', 'liboghma_py.so')
-dll_lib = ctypes.CDLL(dll_path)
-
+if platform.system() == 'Linux':
+	try:
+		dll_path = os.path.join('/', 'usr', 'lib', 'liboghma_py.so')
+		dll_lib = ctypes.CDLL(dll_path)
+	except:
+		print('Labels DLL not found.')
+else:
+	print('Oghma Labels are not currently supported on this operating system.')
 
 class my_data():
 	def __init__(self, b, info, widget):
@@ -64,7 +70,10 @@ class tokens:
 		global dll_lib
 
 		self.lib = lib
-		self.dll_lib = dll_lib
+		try:
+			self.dll_lib = dll_lib
+		except:
+			return None
 
 		self.dll_lib.token_lib_find.restype = ctypes.c_void_p
 		if len(lib) == 0:
@@ -78,7 +87,10 @@ class tokens:
 
 	def find(self, token):
 		search_token = token.strip()
-		ret = self.dll_lib.token_lib_find(ctypes.byref(fast_lib), ctypes.c_char_p(self.str2bytes(search_token)))
+		try:
+			ret = self.dll_lib.token_lib_find(ctypes.byref(fast_lib), ctypes.c_char_p(self.str2bytes(search_token)))
+		except:
+			return False
 		if ret != None:
 			tok = token_lib_item.from_address(ret)
 			token = self.ctoken_to_python_token(tok)

@@ -1,4 +1,4 @@
-import PyOghma_ML as OML
+import PyOghma-ML as OML
 import os
 
 ml_dir = os.path.join('/', 'media', 'cai', 'Big', 'PycharmProjects', 'Simulations', 'ML_testing','Single')

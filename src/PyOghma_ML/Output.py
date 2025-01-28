@@ -1,5 +1,6 @@
 import os
 import re
+import platform
 
 import numpy as np
 import pandas as pd
@@ -175,9 +176,12 @@ class Output:
         return parameter
 
     def multipoint_row(self, parameter, mean, std, mape, predictions):
-        parameter = Label(parameter)
-        self.prediction_dictionary[parameter.english] = {}
-        dictionary = self.prediction_dictionary[parameter.english]
+        if Label(parameter).english == "Not Found":
+            self.prediction_dictionary[parameter] = {}
+            dictionary = self.prediction_dictionary[parameter]
+        else:
+            self.prediction_dictionary[parameter.english] = {}
+            dictionary = self.prediction_dictionary[parameter.english]
         if mean > 1e3 or mean < 1e-3:
             mean = '{:.2e}'.format(mean)
         dictionary['Mean'] = mean
@@ -188,16 +192,20 @@ class Output:
 
     def multipoint_row_single(self, parameter, mean, mape):
         keys = list(self.prediction_dictionary.keys())
-        parameter = Label(parameter)
-        print(parameter.english)
-        print(mean)
-        if parameter.english in keys:
-            number = len(np.where(parameter.english in keys))
-            parameter.english = parameter.english + ' (' + str(number) + ')'
-        self.prediction_dictionary[parameter.english] = {}
-        dictionary = self.prediction_dictionary[parameter.english]
-        #if mean > 1e3 or mean < 1e-3:
-        #    mean = '{:.2e}'.format(mean)
+        if Label(parameter).english == "Not Found":
+            parameter = self.clean_parameter(parameter)
+            self.prediction_dictionary[parameter] = {}
+            dictionary = self.prediction_dictionary[parameter]
+            parameter = Label(parameter)
+        else:
+            parameter = Label(parameter)
+            if parameter.english in keys:
+                number = len(np.where(parameter.english in keys))
+                parameter.english = parameter.english + ' (' + str(number) + ')'
+            self.prediction_dictionary[parameter.english] = {}
+            dictionary = self.prediction_dictionary[parameter.english]
+        if mean > 1e3 or mean < 1e-3:
+            mean = '{:.2e}'.format(mean)
         dictionary['Mean'] = mean
         dictionary['Units'] = parameter.units
         dictionary['MAPE (\%)'] = mape
@@ -262,9 +270,6 @@ class Output:
                     predictions_mape = self.MAPE[idx][0]
                     self.multipoint_row_single(parameter, predictions_mean, predictions_mape)
                 else:
-                    print(idx, jdx)
-                    print(outputs[idx][jdx])
-                    print(outputs)
                     parameter = outputs[idx][jdx]
                     predictions_mean = self.networks.mean[idx][jdx]
                     predictions_mape = self.MAPE[idx][jdx]
@@ -295,7 +300,10 @@ class Output:
         if len(df_files) == len(cf_files):
             for idx in range(len(df_files)):
                 try:
-                    self.pdf.subsection(Label(outputs[idx][0]).english)
+                    if Label(outputs[idx][0]).english == "Not Found":
+                        self.pdf.subsection(self.clean_parameter(outputs[idx][0]))
+                    else:
+                        self.pdf.subsection(Label(outputs[idx][0]).english)
                 except:
                     self.pdf.subsection('Error')
                 figs = [df_files[idx], cf_files[idx]]
@@ -307,7 +315,10 @@ class Output:
         outputs = [self.networks.oghma_network_config['sims'][self.networks.networks_configured[working_network]]['outputs'] for working_network in range(len(self.networks.networks_configured))]
         for idx in range(len(cf_files)):
             try:
-                self.pdf.subsection(Label(outputs[idx][0]).english)
+                if Label(outputs[idx][0]).english == "Not Found":
+                    self.pdf.subsection(self.clean_parameter(outputs[idx][0]))
+                else:
+                    self.pdf.subsection(Label(outputs[idx][0]).english)
             except:
                 self.pdf.subsection('Error')
             figs = [cf_files[idx]]
@@ -345,8 +356,9 @@ class Output:
         self.name = name
         self.pdf.end_document()
         self.pdf.save_tex()
-        self.pdf.compile()
-        self.pdf.compile()
-        self.clean_up()
+        if platform.system() == 'Linux':
+            self.pdf.compile()
+            self.pdf.compile()
+            self.clean_up()
         self.prediction_table.to_csv(self.name + '.csv')
 

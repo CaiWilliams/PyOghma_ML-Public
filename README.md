@@ -129,7 +129,7 @@ O.save_report('DeviceReport')
 ```
 
 By default, PyOghma_ML will output both a latex based report of predictions accompanied by the networks respective confusion matrices and csv table of the predicted values.
-
+On Linux the latex report will automatically compile utilising pdflatex and then component files deleted. On Windows this is a manual process.
 
 ## Authors
 

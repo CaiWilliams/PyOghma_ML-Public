@@ -1,0 +1,17 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "PyOghma_ML"
+version = "0.0.0"
+authors = [
+  { name="Cai Williams", email="cai.williams@physik.tu-chemnitz.de" },
+]
+description = "A Python Pipeline for Machine Learning with Oghma"
+readme = "README.md"
+dependencies = ["h5py>=3.12.1", "matplotlib>=3.10.0", "numpy>=2.2.2", "pandas>=2.2.3", "scipy>=1.15.1", "setuptools>=75.1.0", "tensorflow>=2.18.0", "ujson>=5.10.0"]
+
+[project.urls]
+Homepage = "https://github.com/CaiWilliams/Oghma_ML"
+Issues = "https://github.com/CaiWilliams/Oghma_ML/issues"

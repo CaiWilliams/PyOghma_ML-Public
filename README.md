@@ -17,7 +17,7 @@ PyOghma_ML may be installed using pip
     
 ## Usage/Examples
 
-This guide is not a guide for how to utilise the machine learning features of OghmaNano. If you are unfamiliar with OghmaNano or its machine learning features please refer to the the [OghmaNano User Manual](https://www.oghma-nano.com/docs/man/understanding_oghma_nano.pdf) before proceeding.
+This guide is not a guide for how to utilise the machine learning features of OghmaNano. If you are unfamiliar with OghmaNano or its machine learning features please refer to the [OghmaNano User Manual](https://www.oghma-nano.com/docs/man/understanding_oghma_nano.pdf) before proceeding.
 
 ### Machine Learning Inputs
 

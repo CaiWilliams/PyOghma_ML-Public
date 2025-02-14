@@ -13,4 +13,4 @@ class Predicting:
         self.model = tf.keras.models.load_model(dir)
 
     def predict(self):
-        return self.model.predict(self.experimental_feature)
+        return self.model(self.experimental_feature)

@@ -212,7 +212,14 @@ class Networks:
         else:
             min_max_log = pd.read_csv(os.path.join(dir, 'vectors', 'vec', 'min_max.csv'), header=None, sep=' ',
                                       names=['param', 'min', 'max', 'log'])
-        vecs = ['light_1.0.vec' + str(i) for i in range(self.points)]
+        prefix = self.oghma_network_config['sims'][self.networks_configured[self.working_network]]['inputs']
+        if len(prefix) > 1:
+            vecs = []
+            for idx in range(len(prefix)):
+                temp_vecs = [prefix[idx] + '.vec' + str(i) for i in range(self.points)]
+                vecs.append(temp_vecs)
+        else:
+            vecs = [prefix[0] + '.vec' + str(i) for i in range(self.points)]
         min_max_log = min_max_log[min_max_log['param'].isin(vecs)]
         dir_min = min_max_log['min'].values
         dir_max = min_max_log['max'].values
